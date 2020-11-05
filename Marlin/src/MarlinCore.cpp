@@ -77,6 +77,10 @@
   #include "lcd/dwin/e3v2/rotary_encoder.h"
 #endif
 
+#if ENABLED(EXTENSIBLE_UI)
+  #include "lcd/extui/ui_api.h"
+#endif
+
 #if ENABLED(IIC_BL24CXX_EEPROM)
   #include "libs/BL24CXX.h"
 #endif
@@ -352,6 +356,8 @@ void enable_all_steppers() {
   ENABLE_AXIS_Y();
   ENABLE_AXIS_Z();
   enable_e_steppers();
+
+  TERN_(EXTENSIBLE_UI, ExtUI::onSteppersEnabled());
 }
 
 void disable_e_steppers() {
@@ -371,6 +377,8 @@ void disable_all_steppers() {
   DISABLE_AXIS_Y();
   DISABLE_AXIS_Z();
   disable_e_steppers();
+
+  TERN_(EXTENSIBLE_UI, ExtUI::onSteppersDisabled());
 }
 
 #if ENABLED(G29_RETRY_AND_RECOVER)
