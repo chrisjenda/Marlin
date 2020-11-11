@@ -359,10 +359,9 @@ void disp_gcode_icon(uint8_t file_num) {
       ZERO(public_buf_m);
       cutFileName((char *)list_file.long_name[i], 16, 8,  (char *)public_buf_m);
 
-      if (list_file.IsFolder[i] == 1) {
-        lv_obj_set_event_cb_mks(buttonGcode[i], event_handler, (i + 1), NULL, 0);
-        lv_imgbtn_set_src(buttonGcode[i], LV_BTN_STATE_REL, "F:/bmp_dir.bin");
-        lv_imgbtn_set_src(buttonGcode[i], LV_BTN_STATE_PR, "F:/bmp_dir.bin");
+      if (list_file.IsFolder[i]) {
+        lv_obj_set_event_cb_mks(buttonGcode[i], event_handler, (i + 1), "", 0);
+        lv_imgbtn_set_src_both(buttonGcode[i], "F:/bmp_dir.bin");
         if (i < 3)
           lv_obj_set_pos(buttonGcode[i], BTN_X_PIXEL * i + INTERVAL_V * (i + 1), titleHeight);
         else
@@ -378,14 +377,12 @@ void disp_gcode_icon(uint8_t file_num) {
 
           //lv_obj_set_event_cb_mks(buttonGcode[i], event_handler, (i + 1), list_file.file_name[i], 1);
 
-          ZERO(test_public_buf_l);
-          strcat(test_public_buf_l,"S:");
-          strcat(test_public_buf_l,list_file.file_name[i]);
-          char *temp = strstr(test_public_buf_l,".GCO");
-          if (temp) { strcpy(temp,".bin"); }
-          lv_obj_set_event_cb_mks(buttonGcode[i], event_handler, (i + 1), NULL, 0);
-          lv_imgbtn_set_src(buttonGcode[i], LV_BTN_STATE_REL, test_public_buf_l);
-          lv_imgbtn_set_src(buttonGcode[i], LV_BTN_STATE_PR, test_public_buf_l);
+          strcpy(test_public_buf_l, "S:");
+          strcat(test_public_buf_l, list_file.file_name[i]);
+          char *temp = strstr(test_public_buf_l, ".GCO");
+          if (temp) strcpy(temp, ".bin");
+          lv_obj_set_event_cb_mks(buttonGcode[i], event_handler, (i + 1), "", 0);
+          lv_imgbtn_set_src_both(buttonGcode[i], test_public_buf_l);
           if (i < 3) {
             lv_obj_set_pos(buttonGcode[i], BTN_X_PIXEL * i + INTERVAL_V * (i + 1) + FILE_PRE_PIC_X_OFFSET, titleHeight + FILE_PRE_PIC_Y_OFFSET);
             buttonText[i] = lv_btn_create(scr, NULL);
@@ -397,7 +394,7 @@ void disp_gcode_icon(uint8_t file_num) {
             //lv_obj_set_style(buttonText[i], &tft_style_label_rel);
             lv_obj_clear_protect(buttonText[i], LV_PROTECT_FOLLOW);
             lv_btn_set_layout(buttonText[i], LV_LAYOUT_OFF);
-            //lv_obj_set_event_cb_mks(buttonText[i], event_handler,(i+10),NULL,0);
+            //lv_obj_set_event_cb_mks(buttonText[i], event_handler,(i+10),"", 0);
             lv_obj_set_pos(buttonText[i], BTN_X_PIXEL * i + INTERVAL_V * (i + 1) + FILE_PRE_PIC_X_OFFSET, titleHeight + FILE_PRE_PIC_Y_OFFSET + 100);
             lv_obj_set_size(buttonText[i], 100, 40);
           }
@@ -412,7 +409,7 @@ void disp_gcode_icon(uint8_t file_num) {
             //lv_imgbtn_set_style(buttonText[i], LV_BTN_STATE_REL, &tft_style_label_rel);
             lv_obj_clear_protect(buttonText[i], LV_PROTECT_FOLLOW);
             lv_btn_set_layout(buttonText[i], LV_LAYOUT_OFF);
-            //lv_obj_set_event_cb_mks(buttonText[i], event_handler,(i+10),NULL,0);
+            //lv_obj_set_event_cb_mks(buttonText[i], event_handler,(i+10),"", 0);
             lv_obj_set_pos(buttonText[i], BTN_X_PIXEL * (i - 3) + INTERVAL_V * ((i - 3) + 1) + FILE_PRE_PIC_X_OFFSET, BTN_Y_PIXEL + INTERVAL_H + titleHeight + FILE_PRE_PIC_Y_OFFSET + 100);
             lv_obj_set_size(buttonText[i], 100, 40);
           }
@@ -422,9 +419,8 @@ void disp_gcode_icon(uint8_t file_num) {
           lv_obj_align(labelPageUp[i], buttonText[i], LV_ALIGN_IN_BOTTOM_MID, 0, 0);
         }
         else {
-          lv_obj_set_event_cb_mks(buttonGcode[i], event_handler, (i + 1), NULL, 0);
-          lv_imgbtn_set_src(buttonGcode[i], LV_BTN_STATE_REL, "F:/bmp_file.bin");
-          lv_imgbtn_set_src(buttonGcode[i], LV_BTN_STATE_PR, "F:/bmp_file.bin");
+          lv_obj_set_event_cb_mks(buttonGcode[i], event_handler, (i + 1), "", 0);
+          lv_imgbtn_set_src_both(buttonGcode[i], "F:/bmp_file.bin");
           if (i < 3)
             lv_obj_set_pos(buttonGcode[i], BTN_X_PIXEL * i + INTERVAL_V * (i + 1), titleHeight);
           else

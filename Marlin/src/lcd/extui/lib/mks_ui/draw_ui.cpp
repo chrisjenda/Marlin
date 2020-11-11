@@ -1579,6 +1579,256 @@ void draw_return_ui() {
   }
 }
 
+// Set the same image for both Released and Pressed
+void lv_imgbtn_set_src_both(lv_obj_t *imgbtn, const void *src) {
+  lv_imgbtn_set_src(imgbtn, LV_BTN_STATE_REL, src);
+  lv_imgbtn_set_src(imgbtn, LV_BTN_STATE_PR,  src);
+}
+
+// Use label style for the image button
+void lv_imgbtn_use_label_style(lv_obj_t *imgbtn) {
+  lv_imgbtn_set_style(imgbtn, LV_BTN_STATE_REL, &tft_style_label_rel);
+  lv_imgbtn_set_style(imgbtn, LV_BTN_STATE_PR,  &tft_style_label_pre);
+}
+
+// Use label style for the button
+void lv_btn_use_label_style(lv_obj_t *btn) {
+  lv_btn_set_style(btn, LV_BTN_STYLE_REL, &tft_style_label_rel);
+  lv_btn_set_style(btn, LV_BTN_STYLE_PR,  &tft_style_label_pre);
+}
+
+// Use button style for the button
+void lv_btn_use_button_style(lv_obj_t *btn) {
+  lv_btn_set_style(btn, LV_BTN_STYLE_REL, &style_btn_rel);
+  lv_btn_set_style(btn, LV_BTN_STYLE_PR,  &style_btn_pr);
+}
+
+// Use a single style for both Released and Pressed
+void lv_btn_set_style_both(lv_obj_t *btn, lv_style_t *style) {
+  lv_btn_set_style(btn, LV_BTN_STYLE_REL, style);
+  lv_btn_set_style(btn, LV_BTN_STYLE_PR,  style);
+}
+
+// Create a screen
+lv_obj_t* lv_screen_create(DISP_STATE newScreenType, const char* title) {
+  lv_obj_t *scr = lv_obj_create(nullptr, nullptr);
+  lv_obj_set_style(scr, &tft_style_scr);
+  lv_scr_load(scr);
+  lv_obj_clean(scr);
+
+  // breadcrumbs
+  if (disp_state_stack._disp_state[disp_state_stack._disp_index] != newScreenType) {
+    disp_state_stack._disp_index++;
+    disp_state_stack._disp_state[disp_state_stack._disp_index] = newScreenType;
+  }
+  disp_state = newScreenType;
+
+  // title
+  lv_obj_t *titleLabel = nullptr;
+  if (!title)
+    titleLabel = lv_label_create(scr, TITLE_XPOS, TITLE_YPOS, creat_title_text());
+  else if (title[0] != '\0')
+    titleLabel = lv_label_create(scr, TITLE_XPOS, TITLE_YPOS, title);
+  if (titleLabel)
+    lv_obj_set_style(titleLabel, &tft_style_label_rel);
+
+  lv_refr_now(lv_refr_get_disp_refreshing());
+
+  return scr;
+}
+
+// Create an empty label
+lv_obj_t* lv_label_create_empty(lv_obj_t *par) {
+  lv_obj_t *label = lv_label_create(par, (lv_obj_t*)nullptr);
+  return label;
+}
+
+// Create a label with style and text
+lv_obj_t* lv_label_create(lv_obj_t *par, const char *text) {
+  lv_obj_t *label = lv_label_create_empty(par);
+  if (text) lv_label_set_text(label, text);
+  lv_obj_set_style(label, &tft_style_label_rel);
+  return label;
+}
+
+// Create a label with style, position, and text
+lv_obj_t* lv_label_create(lv_obj_t *par, lv_coord_t x, lv_coord_t y, const char *text) {
+  lv_obj_t *label = lv_label_create(par, text);
+  lv_obj_set_pos(label, x, y);
+  return label;
+}
+
+// Create a button with callback, ID, and Style.
+lv_obj_t* lv_btn_create(lv_obj_t *par, lv_event_cb_t cb, const int id/*=0*/, lv_style_t *style/*=&style_para_value*/) {
+  lv_obj_t *btn = lv_btn_create(par, nullptr);
+  if (id)
+    lv_obj_set_event_cb_mks(btn, cb, id, "", 0);
+  else
+    lv_obj_set_event_cb(btn, cb);
+  lv_btn_set_style_both(btn, style);
+  return btn;
+}
+
+// Create a button with callback and ID, with label style.
+lv_obj_t* lv_label_btn_create(lv_obj_t *par, lv_event_cb_t cb, const int id/*=0*/) {
+  lv_obj_t *btn = lv_btn_create(par, cb, id, nullptr);
+  lv_btn_use_label_style(btn);
+  return btn;
+}
+
+// Create a button with callback and ID, with button style.
+lv_obj_t* lv_button_btn_create(lv_obj_t *par, lv_event_cb_t cb, const int id/*=0*/) {
+  lv_obj_t *btn = lv_btn_create(par, cb, id, nullptr);
+  lv_btn_use_button_style(btn);
+  return btn;
+}
+
+// Create a button with position, size, callback, ID, and style.
+lv_obj_t* lv_btn_create(lv_obj_t *par, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_event_cb_t cb, const int id, lv_style_t *style) {
+  lv_obj_t *btn = lv_btn_create(par, cb, id, style);
+  lv_obj_set_pos(btn, x, y);
+  lv_obj_set_size(btn, w, h);
+  return btn;
+}
+
+// Create a button with position, size, callback, and ID. Style set to style_para_value.
+lv_obj_t* lv_btn_create(lv_obj_t *par, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_event_cb_t cb, const int id/*=0*/) {
+  lv_obj_t *btn = lv_btn_create(par, x, y, w, h, cb, id, &style_para_value);
+  return btn;
+}
+
+// Create a button with position, size, callback, and ID, with label style.
+lv_obj_t* lv_label_btn_create(lv_obj_t *par, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_event_cb_t cb, const int id/*=0*/) {
+  lv_obj_t *btn = lv_label_btn_create(par, cb, id);
+  lv_obj_set_pos(btn, x, y);
+  lv_obj_set_size(btn, w, h);
+  return btn;
+}
+
+// Create a button with position, size, callback, and ID, with label style.
+lv_obj_t* lv_button_btn_create(lv_obj_t *par, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_event_cb_t cb, const int id/*=0*/) {
+  lv_obj_t *btn = lv_button_btn_create(par, cb, id);
+  lv_obj_set_pos(btn, x, y);
+  lv_obj_set_size(btn, w, h);
+  return btn;
+}
+
+// Create a button with callback and ID. Style set to style_para_back.
+lv_obj_t* lv_btn_create_back(lv_obj_t *par, lv_event_cb_t cb, const int id/*=0*/) {
+  return lv_btn_create(par, cb, id, &style_para_back);
+}
+// Create a button with position, size, callback, and ID. Style set to style_para_back.
+lv_obj_t* lv_btn_create_back(lv_obj_t *par, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_event_cb_t cb, const int id/*=0*/) {
+  lv_obj_t *btn = lv_btn_create_back(par, cb, id);
+  lv_obj_set_pos(btn, x, y);
+  lv_obj_set_size(btn, w, h);
+  return btn;
+}
+
+// Create an image button with image, callback, and ID. Use label style.
+lv_obj_t* lv_imgbtn_create(lv_obj_t *par, const char *img, lv_event_cb_t cb, const int id/*=0*/) {
+  lv_obj_t *btn = lv_imgbtn_create(par, nullptr);
+  if (img) lv_imgbtn_set_src_both(btn, img);
+  if (id)
+    lv_obj_set_event_cb_mks(btn, cb, id, "", 0);
+  else
+    lv_obj_set_event_cb(btn, cb);
+  lv_imgbtn_use_label_style(btn);
+  lv_btn_set_layout(btn, LV_LAYOUT_OFF);
+  return btn;
+}
+
+// Create an image button with image, position, callback, and ID. Use label style.
+lv_obj_t* lv_imgbtn_create(lv_obj_t *par, const char *img, lv_coord_t x, lv_coord_t y, lv_event_cb_t cb, const int id/*=0*/) {
+  lv_obj_t *btn = lv_imgbtn_create(par, img, cb, id);
+  lv_obj_set_pos(btn, x, y);
+  return btn;
+}
+
+lv_obj_t* lv_big_button_create(lv_obj_t *par, const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_event_cb_t cb, const int id, bool centerLabel) {
+  lv_obj_t *btn = lv_imgbtn_create(par, img, cb, id);
+  lv_obj_set_pos(btn, x, y);
+  lv_obj_t *label = lv_label_create_empty(btn);
+  if (gCfgItems.multiple_language) {
+    lv_label_set_text(label, text);
+    if (centerLabel)
+      lv_obj_align(label, btn, LV_ALIGN_CENTER, 0, 0);
+    else
+      lv_obj_align(label, btn, LV_ALIGN_IN_BOTTOM_MID, 0, BUTTON_TEXT_Y_OFFSET);
+  }
+  #if HAS_ROTARY_ENCODER
+    if (gCfgItems.encoder_enable == true)
+      lv_group_add_obj(g, btn);
+  #endif
+  return btn;
+}
+
+lv_obj_t* lv_screen_menu_item(lv_obj_t *par, const char *text, lv_coord_t x, lv_coord_t y, lv_event_cb_t cb, const int id, const int index, bool drawArrow) {
+  lv_obj_t *btn = lv_btn_create(par, nullptr);   /*Add a button the current screen*/
+  lv_obj_set_pos(btn, x, y);                         /*Set its position*/
+  lv_obj_set_size(btn, PARA_UI_SIZE_X, PARA_UI_SIZE_Y);                       /*Set its size*/
+  if (id > -1) lv_obj_set_event_cb_mks(btn, cb, id, "", 0);
+  lv_btn_use_label_style(btn);
+  lv_btn_set_layout(btn, LV_LAYOUT_OFF);
+  lv_obj_t *label = lv_label_create_empty(btn);        /*Add a label to the button*/
+  if (gCfgItems.multiple_language) {
+    lv_label_set_text(label, text);
+    lv_obj_align(label, btn, LV_ALIGN_IN_LEFT_MID, 0, 0);
+  }
+  #if HAS_ROTARY_ENCODER
+    if (gCfgItems.encoder_enable == true) {
+      lv_group_add_obj(g, btn);
+    }
+  #endif
+
+  if (drawArrow) (void)lv_imgbtn_create(par, "F:/bmp_arrow.bin", x + PARA_UI_SIZE_X, y + PARA_UI_ARROW_V, cb, id);
+
+  lv_obj_t *line1 = lv_line_create(par, nullptr);
+  lv_ex_line(line1, line_points[index]);
+
+  return btn;
+}
+
+lv_obj_t* lv_screen_menu_item_1_edit(lv_obj_t *par, const char *text, lv_coord_t x, lv_coord_t y, lv_event_cb_t cb, const int id, const int index, const char *editValue) {
+  lv_obj_t* btn = lv_screen_menu_item(par, text, x, y, cb, -1, index, false);
+  lv_obj_t* btnValue = lv_btn_create(par, PARA_UI_VALUE_POS_X, y + PARA_UI_VALUE_V, PARA_UI_VALUE_BTN_X_SIZE, PARA_UI_VALUE_BTN_Y_SIZE, cb, id);
+  lv_obj_t* labelValue = lv_label_create_empty(btnValue);
+  lv_label_set_text(labelValue, editValue);
+  lv_obj_align(labelValue, btnValue, LV_ALIGN_CENTER, 0, 0);
+  return btn;
+}
+
+lv_obj_t* lv_screen_menu_item_2_edit(lv_obj_t *par, const char *text, lv_coord_t x, lv_coord_t y, lv_event_cb_t cb, const int id, const int index, const char *editValue, const int idEdit2, const char *editValue2) {
+  lv_obj_t* btn = lv_screen_menu_item(par, text, x, y, cb, -1, index, false);
+
+  lv_obj_t* btnValue = lv_btn_create(par, PARA_UI_VALUE_POS_X_2, y + PARA_UI_VALUE_V_2, PARA_UI_VALUE_BTN_X_SIZE, PARA_UI_VALUE_BTN_Y_SIZE, cb, idEdit2);
+  lv_obj_t* labelValue = lv_label_create_empty(btnValue);
+  lv_label_set_text(labelValue, editValue2);
+  lv_obj_align(labelValue, btnValue, LV_ALIGN_CENTER, 0, 0);
+
+  btnValue = lv_btn_create(par, PARA_UI_VALUE_POS_X, y + PARA_UI_VALUE_V, PARA_UI_VALUE_BTN_X_SIZE, PARA_UI_VALUE_BTN_Y_SIZE, cb, id);
+  labelValue = lv_label_create_empty(btnValue);
+  lv_label_set_text(labelValue, editValue);
+  lv_obj_align(labelValue, btnValue, LV_ALIGN_CENTER, 0, 0);
+
+  return btn;
+}
+
+lv_obj_t* lv_screen_menu_item_onoff(lv_obj_t *par, const char *text, lv_coord_t x, lv_coord_t y, lv_event_cb_t cb, const int id, const int index, const bool curValue) {
+  lv_screen_menu_item(par, text, x, y, cb, -1, index, false);
+  lv_obj_t* btnValue = lv_imgbtn_create(par, curValue ? "F:/bmp_enable.bin" : "F:/bmp_disable.bin", PARA_UI_STATE_POS_X, y + PARA_UI_STATE_V, cb, id);
+  lv_obj_t* labelValue = lv_label_create_empty(btnValue);
+  lv_label_set_text(labelValue, curValue ? machine_menu.enable : machine_menu.disable);
+  lv_obj_align(labelValue, btnValue, LV_ALIGN_CENTER, 0, 0);
+  return btnValue;
+}
+
+void lv_screen_menu_item_onoff_update(lv_obj_t *btn, const bool curValue) {
+  lv_imgbtn_set_src_both(btn, curValue ? "F:/bmp_enable.bin" : "F:/bmp_disable.bin");
+  lv_label_set_text((lv_obj_t*)btn->child_ll.head, curValue ? machine_menu.enable : machine_menu.disable);
+}
+
+
 #if ENABLED(SDSUPPORT)
 
   void sd_detection() {

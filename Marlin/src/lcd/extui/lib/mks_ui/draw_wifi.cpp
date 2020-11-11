@@ -114,11 +114,11 @@ void lv_draw_wifi(void) {
 
   if (gCfgItems.wifi_mode_sel == STA_MODEL) {
 
-    lv_obj_set_event_cb_mks(buttonReconnect, event_handler,ID_W_RECONNECT, NULL,0);
-    lv_imgbtn_set_src(buttonReconnect, LV_BTN_STATE_REL, "F:/bmp_wifi.bin");
-    lv_imgbtn_set_src(buttonReconnect, LV_BTN_STATE_PR, "F:/bmp_wifi.bin");
-    lv_imgbtn_set_style(buttonReconnect, LV_BTN_STATE_PR, &tft_style_label_pre);
-    lv_imgbtn_set_style(buttonReconnect, LV_BTN_STATE_REL, &tft_style_label_rel);
+    buttonReconnect = lv_imgbtn_create(scr, nullptr);
+
+    lv_obj_set_event_cb_mks(buttonReconnect, event_handler, ID_W_RECONNECT, "", 0);
+    lv_imgbtn_set_src_both(buttonReconnect, "F:/bmp_wifi.bin");
+    lv_imgbtn_use_label_style(buttonReconnect);
 
     #if HAS_ROTARY_ENCODER
       if (gCfgItems.encoder_enable) lv_group_add_obj(g, buttonReconnect);
