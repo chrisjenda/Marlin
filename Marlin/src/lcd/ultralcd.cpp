@@ -153,7 +153,7 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   #if HAS_SLOW_BUTTONS
     volatile uint8_t MarlinUI::slow_buttons;
   #endif
-  #if HAS_TOUCH_XPT2046
+  #if HAS_TOUCH_BUTTONS
     #include "touch/touch_buttons.h"
     bool MarlinUI::on_edit_screen = false;
   #endif
@@ -233,7 +233,7 @@ millis_t MarlinUI::next_button_update_ms; // = 0
     int8_t MarlinUI::encoderDirection = ENCODERBASE;
   #endif
 
-  #if HAS_TOUCH_XPT2046
+  #if HAS_TOUCH_BUTTONS
     uint8_t MarlinUI::touch_buttons;
     uint8_t MarlinUI::repeat_delay;
   #endif
@@ -842,7 +842,7 @@ void MarlinUI::update() {
       quick_feedback();                               //  - Always make a click sound
     };
 
-    #if HAS_TOUCH_XPT2046
+    #if HAS_TOUCH_BUTTONS
       if (touch_buttons) {
         RESET_STATUS_TIMEOUT();
         if (touch_buttons & (EN_A | EN_B)) {              // Menu arrows, in priority
@@ -863,7 +863,7 @@ void MarlinUI::update() {
       }
       else // keep wait_for_unclick value
 
-    #endif // HAS_TOUCH_XPT2046
+    #endif // HAS_TOUCH_BUTTONS
 
       {
         // Integrated LCD click handling via button_pressed
@@ -885,7 +885,7 @@ void MarlinUI::update() {
 
     next_lcd_update_ms = ms + LCD_UPDATE_INTERVAL;
 
-    #if HAS_TOUCH_XPT2046
+    #if HAS_TOUCH_BUTTONS
 
       if (on_status_screen()) next_lcd_update_ms += (LCD_UPDATE_INTERVAL) * 2;
 
@@ -1232,7 +1232,7 @@ void MarlinUI::update() {
           #if HAS_SLOW_BUTTONS
             | slow_buttons
           #endif
-          #if BOTH(HAS_TOUCH_XPT2046, HAS_ENCODER_ACTION)
+          #if BOTH(HAS_TOUCH_BUTTONS, HAS_ENCODER_ACTION)
             | (touch_buttons & TERN(HAS_ENCODER_WHEEL, ~(EN_A | EN_B), 0xFF))
           #endif
         );
@@ -1547,7 +1547,7 @@ void MarlinUI::update() {
 
   #endif
 
-  #if HAS_TOUCH_XPT2046
+  #if HAS_TOUCH_BUTTONS
 
     //
     // Screen Click
