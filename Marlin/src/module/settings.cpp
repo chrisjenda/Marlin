@@ -147,7 +147,7 @@
 #endif
 
 #if ENABLED(TOUCH_SCREEN_CALIBRATION)
-  #include "../lcd/tft/touch.h"
+  #include "../lcd/tft_io/touch_calibration.h"
 #endif
 
 #pragma pack(push, 1) // No padding between variables
@@ -428,7 +428,7 @@ typedef struct SettingsDataStruct {
   // TOUCH_SCREEN_CALIBRATION
   //
   #if ENABLED(TOUCH_SCREEN_CALIBRATION)
-    touch_calibration_t touch_calibration;
+    touch_calibration_t touch_calibration_data;
   #endif
 
 } SettingsData;
@@ -1380,7 +1380,7 @@ void MarlinSettings::postprocess() {
     // TOUCH_SCREEN_CALIBRATION
     //
     #if ENABLED(TOUCH_SCREEN_CALIBRATION)
-      EEPROM_WRITE(touch.calibration);
+      EEPROM_WRITE(touch_calibration.calibration);
     #endif
 
     //
@@ -2237,8 +2237,8 @@ void MarlinSettings::postprocess() {
       // TOUCH_SCREEN_CALIBRATION
       //
       #if ENABLED(TOUCH_SCREEN_CALIBRATION)
-        _FIELD_TEST(touch.calibration);
-        EEPROM_READ(touch.calibration);
+        _FIELD_TEST(touch_calibration_data);
+        EEPROM_READ(touch_calibration.calibration);
       #endif
 
       eeprom_error = size_error(eeprom_index - (EEPROM_OFFSET));
@@ -2546,7 +2546,7 @@ void MarlinSettings::reset() {
   //
   // TOUCH_SCREEN_CALIBRATION
   //
-  TERN_(TOUCH_SCREEN_CALIBRATION, touch.calibration_reset());
+  TERN_(TOUCH_SCREEN_CALIBRATION, touch_calibration.calibration_reset());
 
   //
   // Magnetic Parking Extruder
