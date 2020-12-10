@@ -535,7 +535,7 @@ void MarlinSettings::postprocess() {
     );
 #endif
 
-#define DEBUG_OUT ENABLED(EEPROM_CHITCHAT)
+#define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
 #include "../core/debug_out.h"
 
 #if ENABLED(EEPROM_SETTINGS)
@@ -2267,14 +2267,14 @@ void MarlinSettings::postprocess() {
 
           if (!ubl.sanity_check()) {
             SERIAL_EOL();
-            #if ENABLED(EEPROM_CHITCHAT)
+            #if BOTH(EEPROM_CHITCHAT, DEBUG_LEVELING_FEATURE)
               ubl.echo_name();
               DEBUG_ECHOLNPGM(" initialized.\n");
             #endif
           }
           else {
             eeprom_error = true;
-            #if ENABLED(EEPROM_CHITCHAT)
+            #if BOTH(EEPROM_CHITCHAT, DEBUG_LEVELING_FEATURE)
               DEBUG_ECHOPGM("?Can't enable ");
               ubl.echo_name();
               DEBUG_ECHOLNPGM(".");
