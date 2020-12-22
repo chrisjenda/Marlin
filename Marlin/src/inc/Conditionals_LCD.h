@@ -748,6 +748,7 @@
 #endif
 #if !HAS_LEVELING
   #undef RESTORE_LEVELING_AFTER_G28
+  #undef ENABLE_LEVELING_AFTER_G28
 #endif
 
 #ifdef GRID_MAX_POINTS_X
