@@ -96,6 +96,7 @@
 // S4: Enable Linear Advance
 // S5: Set Linear Advance to tuned Value, Disable Reverse Z from S1 since it was a mistake -
 // Set Hotend PID Values, Set Calibrated Step offsets for Extruder
+// S6: Enabled Meatpack
 //===========================================================================
 //============================ Modified Pins ================================
 //===========================================================================

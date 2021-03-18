@@ -2234,6 +2234,14 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
 #endif
 
 /**
+ * Sanity Check for MEATPACK and BINARY_FILE_TRANSFER Features
+ */
+#if BOTH(MEATPACK, BINARY_FILE_TRANSFER)
+  #error "Either enable MEATPACK or enable BINARY_FILE_TRANSFER."
+#endif
+
+
+/**
  * Make sure only one display is enabled
  */
 #if 1 < 0 \
