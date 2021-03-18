@@ -92,6 +92,7 @@
 // Enhance Stepper precision, Enable Emergency Parser, Enable Filament Load/Unload menus, Enable Host Action Commands -
 // Enable Host Prompt Support, Fix temperature.cpp(Line1211) Syntax error, Update and Use Version.h.
 // S2: Enable Unified Bed Leveling(UBL)
+// S3: Enabled Firmware Retraction
 //
 //===========================================================================
 //============================ Modified Pins ================================
