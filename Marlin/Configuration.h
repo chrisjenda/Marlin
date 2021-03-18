@@ -91,6 +91,7 @@
 // Enable Auto Z Align, Disable Z Timeout, Enable Adaptive Step Smoothing, Enable Babystepping -
 // Enhance Stepper precision, Enable Emergency Parser, Enable Filament Load/Unload menus, Enable Host Action Commands -
 // Enable Host Prompt Support, Fix temperature.cpp(Line1211) Syntax error, Update and Use Version.h.
+// S2: Enable Unified Bed Leveling(UBL)
 //
 //===========================================================================
 //============================ Modified Pins ================================
@@ -1526,9 +1527,10 @@
  */
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
-//S1: Enable Bilinear bed leveling
-#define AUTO_BED_LEVELING_BILINEAR
-//#define AUTO_BED_LEVELING_UBL
+//S2: Disable Bilinear bed leveling(Enabled in S1)
+//#define AUTO_BED_LEVELING_BILINEAR
+//S2: Enable Unified bed leveling
+#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
 /**
@@ -1536,9 +1538,10 @@
  * these options to restore the prior leveling state or to always enable
  * leveling immediately after G28.
  */
-//#define RESTORE_LEVELING_AFTER_G28
-//S1: Enable
-#define ENABLE_LEVELING_AFTER_G28
+//S2: Enable
+#define RESTORE_LEVELING_AFTER_G28
+//S2: Disable Restore Leveling After G28(Enabled in S1)
+//#define ENABLE_LEVELING_AFTER_G28
 
 /**
  * Auto-leveling needs preheating
@@ -1576,15 +1579,16 @@
   /**
    * Enable the G26 Mesh Validation Pattern tool.
    */
-  //#define G26_MESH_VALIDATION
+  //S2: Enable and set values to 0.4mm nozzle specific
+  #define G26_MESH_VALIDATION
   #if ENABLED(G26_MESH_VALIDATION)
     #define MESH_TEST_NOZZLE_SIZE    0.4  // (mm) Diameter of primary nozzle.
-    #define MESH_TEST_LAYER_HEIGHT   0.2  // (mm) Default layer height for G26.
+    #define MESH_TEST_LAYER_HEIGHT   0.2938  // (mm) Default layer height for G26.
     #define MESH_TEST_HOTEND_TEMP  205    // (°C) Default nozzle temperature for G26.
-    #define MESH_TEST_BED_TEMP      60    // (°C) Default bed temperature for G26.
+    #define MESH_TEST_BED_TEMP      64    // (°C) Default bed temperature for G26.
     #define G26_XY_FEEDRATE         20    // (mm/s) Feedrate for G26 XY moves.
     #define G26_XY_FEEDRATE_TRAVEL 100    // (mm/s) Feedrate for G26 XY travel moves.
-    #define G26_RETRACT_MULTIPLIER   1.0  // G26 Q (retraction) used by default between mesh test elements.
+    #define G26_RETRACT_MULTIPLIER   0.8  // G26 Q (retraction) used by default between mesh test elements.
   #endif
 
 #endif
@@ -1621,10 +1625,11 @@
   //===========================================================================
   //========================= Unified Bed Leveling ============================
   //===========================================================================
+  //S2: Enable
+  #define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
-  //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
-
-  #define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
+  //S2: Set Mesh Inset to 35 to start
+  #define MESH_INSET 35              // Set Mesh bounds as an inset region of the bed
   #define GRID_MAX_POINTS_X 10      // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
