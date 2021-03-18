@@ -859,8 +859,8 @@
    *               | 1   2 | 2   3 | 3   4 | 4   1 |
    */
   #ifndef Z_STEPPER_ALIGN_XY
-    //S1: Reverse Z Steppers
-    #define Z_STEPPERS_ORIENTATION 1
+    //S5: Disable Reverse from S1 since it was a mistake
+    #define Z_STEPPERS_ORIENTATION 0
   #endif
 
   // Provide Z stepper positions for more rapid convergence in bed alignment.
@@ -1829,8 +1829,8 @@
 #define LIN_ADVANCE
 #if ENABLED(LIN_ADVANCE)
   //#define EXTRA_LIN_ADVANCE_K // Enable for second linear advance constants
-  ////S4: Set Linear Advance to a previously tuned value, S5 will have tuned setting
-  #define LIN_ADVANCE_K 0.091    // Unit: mm compression per 1mm/s extruder speed
+  ////S5: Set Linear Advance to tuned value
+  #define LIN_ADVANCE_K 0.084    // Unit: mm compression per 1mm/s extruder speed
   //#define LA_DEBUG            // If enabled, this will generate debug information output over USB.
   //#define EXPERIMENTAL_SCURVE // Enable this option to permit S-Curve Acceleration
 #endif

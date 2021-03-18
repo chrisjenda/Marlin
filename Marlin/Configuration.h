@@ -94,6 +94,8 @@
 // S2: Enable Unified Bed Leveling(UBL)
 // S3: Enabled Firmware Retraction
 // S4: Enable Linear Advance
+// S5: Set Linear Advance to tuned Value, Disable Reverse Z from S1 since it was a mistake -
+// Set Hotend PID Values, Set Calibrated Step offsets for Extruder
 //===========================================================================
 //============================ Modified Pins ================================
 //===========================================================================
@@ -569,9 +571,10 @@
     #define DEFAULT_Ki_LIST {   1.08,   1.08 }
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
-    #define DEFAULT_Kp  22.20
-    #define DEFAULT_Ki   1.08
-    #define DEFAULT_Kd 114.00
+    //S5: Update tuned values
+    #define DEFAULT_Kp 29.14
+    #define DEFAULT_Ki 1.65
+    #define DEFAULT_Kd 111.57
   #endif
 #endif // PIDTEMP
 
@@ -890,11 +893,12 @@
   //Z Rod Pitch in MM
   #define Z_ROD_PITCH 8
 
-  //Calibrated Offset per machine
+  //Calibrated Offset per machine 
   #define X_STEPS_OFFSET 0
   #define Y_STEPS_OFFSET 0
   #define Z_STEPS_OFFSET 0
-  #define E_STEPS_OFFSET 0
+  //S5: Update to tuned value
+  #define E_STEPS_OFFSET 21.2992631
 
 //Wade Extruder Stuff
 //#define WADE_PULLEY_TEETH 11.0
