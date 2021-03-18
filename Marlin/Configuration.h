@@ -93,7 +93,7 @@
 // Enable Host Prompt Support, Fix temperature.cpp(Line1211) Syntax error, Update and Use Version.h.
 // S2: Enable Unified Bed Leveling(UBL)
 // S3: Enabled Firmware Retraction
-//
+// S4: Enable Linear Advance
 //===========================================================================
 //============================ Modified Pins ================================
 //===========================================================================
