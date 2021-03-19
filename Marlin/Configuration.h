@@ -98,6 +98,7 @@
 // Set Hotend PID Values, Set Calibrated Step offsets for Extruder
 // S6: Modified G34 Function to allow Reversing the Steppers, Reverse Z Stepper Orientation, Decrease Z Auto Align Multiplier - 
 // Enabled Home before Filament Change, Lowered Z Stepper Currents.
+// MEATPACK: Enabled Meatpack
 //===========================================================================
 //============================ Modified Pins ================================
 //===========================================================================
