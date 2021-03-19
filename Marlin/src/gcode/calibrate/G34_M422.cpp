@@ -76,8 +76,9 @@ void GcodeSuite::G34() {
     }
 
     const float z_auto_align_accuracy = parser.floatval('T', Z_STEPPER_ALIGN_ACC);
-    if (!WITHIN(z_auto_align_accuracy, 0.01f, 1.0f)) {
-      SERIAL_ECHOLNPGM("?(T)arget accuracy out of bounds (0.01-1.0).");
+    //S6: Allow higher accuracy
+    if (!WITHIN(z_auto_align_accuracy, 0.001f, 1.0f)) {
+      SERIAL_ECHOLNPGM("?(T)arget accuracy out of bounds (0.001-1.0).");
       break;
     }
 
@@ -156,7 +157,12 @@ void GcodeSuite::G34() {
           amplification = z_auto_align_amplification;
 
     #if DISABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
-      bool adjustment_reverse = false;
+      //S6: Add new define to enable reversing z drivers orientation
+      #if G34_REVERSE
+        bool adjustment_reverse = true;
+      #else
+        bool adjustment_reverse = false;
+      #endif
     #endif
 
     #if HAS_DISPLAY

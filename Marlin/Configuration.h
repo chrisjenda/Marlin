@@ -96,6 +96,8 @@
 // S4: Enable Linear Advance
 // S5: Set Linear Advance to tuned Value, Disable Reverse Z from S1 since it was a mistake -
 // Set Hotend PID Values, Set Calibrated Step offsets for Extruder
+// S6: Modified G34 Function to allow Reversing the Steppers, Reverse Z Stepper Orientation, Decrease Z Auto Align Multiplier - 
+// Enabled Home before Filament Change, Lowered Z Stepper Currents.
 //===========================================================================
 //============================ Modified Pins ================================
 //===========================================================================

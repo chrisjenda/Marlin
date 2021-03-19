@@ -874,7 +874,10 @@
   #else
     // Amplification factor. Used to scale the correction step up or down in case
     // the stepper (spindle) position is farther out than the test point.
-    #define Z_STEPPER_ALIGN_AMP 1.0       // Use a value > 1.0 NOTE: This may cause instability!
+    //S6: Decrease Align Multiplier
+    #define Z_STEPPER_ALIGN_AMP 0.5      // Use a value > 1.0 NOTE: This may cause instability!
+    //S6: Add new define to enable reversing z drivers orientation
+    #define G34_REVERSE 1
   #endif
 
   // On a 300mm bed a 5% grade would give a misalignment of ~1.5cm
@@ -2323,7 +2326,8 @@
 
   //S1: Enable
   #define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
-  //#define HOME_BEFORE_FILAMENT_CHANGE           // If needed, home before parking for filament change
+  //S6: enable
+  #define HOME_BEFORE_FILAMENT_CHANGE           // If needed, home before parking for filament change
 
   //S1: Enable
   #define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
@@ -2537,8 +2541,8 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    //S1: Set Current to 900mA
-    #define Z_CURRENT       900
+    //S6: Set Current to 700mA
+    #define Z_CURRENT       700
     #define Z_CURRENT_HOME  Z_CURRENT
     #define Z_MICROSTEPS     16
     #define Z_RSENSE          0.11
@@ -2547,8 +2551,8 @@
   #endif
 
   #if AXIS_IS_TMC(Z2)
-    //S1: Set Current to 900mA
-    #define Z2_CURRENT      900
+    //S6: Set Current to 700mA
+    #define Z2_CURRENT      700
     #define Z2_CURRENT_HOME Z2_CURRENT
     #define Z2_MICROSTEPS    16
     #define Z2_RSENSE         0.11
