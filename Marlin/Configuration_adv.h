@@ -157,16 +157,14 @@
 #endif
 
 #if TEMP_SENSOR_CHAMBER
-  //S1: Disable Z CS Pin since we use that for Heater
-  #define Z_CS_PIN -1
   //S1: Set Chamber Thermorestor to use Third Slot on ramps
   #define TEMP_CHAMBER_PIN TEMP_1_PIN 
-  //S1: Set Heater Pin
-  #define HEATER_CHAMBER_PIN      P1_10   // Required heater on/off pin (example: SKR 1.4 Turbo HE1 plug) (D75)
+  //S1: Set Heater Pin to (D63) (AUX-2)
+  #define HEATER_CHAMBER_PIN      P0_26  // Required heater on/off pin (example: SKR 1.4 Turbo HE1 plug)
   //S1: Invert Heater Mofset Pin
   #define HEATER_CHAMBER_INVERTING true
-  //S1: Enable Case Fan Control
-  #define FAN1_PIN                   P1_21    //(D6) Remove the fan signal on pin P2_04 (example: SKR 1.4 Turbo HE1 plug)
+  //S1: Set Case Fan Control on pin (D59) (AUX-2)
+  #define FAN1_PIN                   P2_06    // Remove the fan signal on pin P2_04 (example: SKR 1.4 Turbo HE1 plug)
 
   #define CHAMBER_FAN               // Enable a fan on the chamber
   #if ENABLED(CHAMBER_FAN)
@@ -463,8 +461,8 @@
 //S1: Enable
 #define USE_CONTROLLER_FAN
 #if ENABLED(USE_CONTROLLER_FAN)
-  //S1: Set Custom Pin on Rearm
-  #define CONTROLLER_FAN_PIN P1_16        // D70 Set a custom pin for the controller fan
+  //S1: Set MCU Controller fan to Pin D5/SERVO2
+  #define CONTROLLER_FAN_PIN P1_19        // Set a custom pin for the controller fan
   //#define CONTROLLER_FAN_USE_Z_ONLY    // With this option only the Z axis is considered
   //S1: Enable Ignore Z since it is always on
   #define CONTROLLER_FAN_IGNORE_Z      // Ignore Z stepper. Useful when stepper timeout is disabled.
@@ -544,7 +542,7 @@
  * the fan will turn on when any selected extruder is above the threshold.
  */
 //S1: Set pin for Extruder Cooling Fan
-#define E0_AUTO_FAN_PIN P1_01 //D79
+#define E0_AUTO_FAN_PIN P1_21 //D6/SERVO1
 #define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
@@ -580,16 +578,14 @@
 //S1: Enable
 #define CASE_LIGHT_ENABLE
 #if ENABLED(CASE_LIGHT_ENABLE)
-  //S1: Override Pin for Case Lights
-  #define CASE_LIGHT_PIN P1_04                  // D77 Override the default pin if needed
   #define INVERT_CASE_LIGHT false             // Set true if Case Light is ON when pin is LOW
   #define CASE_LIGHT_DEFAULT_ON true          // Set default power-up state on
   #define CASE_LIGHT_DEFAULT_BRIGHTNESS 105   // Set default power-up brightness (0-255, requires PWM pin)
-  //S1: Disable PWM for Case Light
-  #define CASE_LIGHT_NO_BRIGHTNESS          // Disable brightness control. Enable for non-PWM lighting.
+  //S7: Enable PWM for Case Light (Was Disabled in S1)
+  //#define CASE_LIGHT_NO_BRIGHTNESS          // Disable brightness control. Enable for non-PWM lighting.
   //#define CASE_LIGHT_MAX_PWM 128            // Limit PWM duty cycle (0-255)
   //S1: Enable
-  //#define CASE_LIGHT_MENU                   // Add Case Light options to the LCD menu
+  #define CASE_LIGHT_MENU                   // Add Case Light options to the LCD menu
   #if ENABLED(NEOPIXEL_LED)
     //#define CASE_LIGHT_USE_NEOPIXEL         // Use NeoPixel LED as case light
   #endif
@@ -1806,8 +1802,8 @@
   #define BABYSTEP_ZPROBE_OFFSET          // Combine M851 Z and Babystepping
   #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
     //#define BABYSTEP_HOTEND_Z_OFFSET      // For multiple hotends, babystep relative Z offsets
-    //S1: enable
-    #define BABYSTEP_ZPROBE_GFX_OVERLAY   // Enable graphical overlay on Z-offset editor
+    //S7: Disable (Enabled in S1)
+    //#define BABYSTEP_ZPROBE_GFX_OVERLAY   // Enable graphical overlay on Z-offset editor
   #endif
 #endif
 
@@ -2462,30 +2458,43 @@
  */
 #if HAS_TRINAMIC_CONFIG
 
-// S0: Override Pins in Board.h on Ramps for UART
+  //S0: Override Pins in Board.h on Ramps for UART, All TX/RX Pins are the same for UART since we can use addressing
 
-// S0: Z1/Z2 are TMC2209 so can use single port with slaves
-  #define Z2_SERIAL_TX_PIN               P0_00 //D20
-  #define Z2_SERIAL_RX_PIN               P0_01 //D21
-
-  #define Z_SERIAL_TX_PIN               P0_00 //D20
-  #define Z_SERIAL_RX_PIN               P0_01 //D21
-
+  //S7: E is TMC2208 and can use UART
   #define E0_SERIAL_TX_PIN               P0_00 //D20
   #define E0_SERIAL_RX_PIN               P0_01 //D21
 
-  #define  X_SLAVE_ADDRESS 0
-  #define  Y_SLAVE_ADDRESS 0
-  #define  Z_SLAVE_ADDRESS 0
-  #define  Z2_SLAVE_ADDRESS 1
-  #define  E0_SLAVE_ADDRESS 3
- // S0: X/Y/E use TMC2209 so they need individual pins
+  //S7: X/Y are TMC2209 and can also use Uart Bus with configurable Addresses
+  #define X_SERIAL_TX_PIN               P0_00 //D20
+  #define X_SERIAL_RX_PIN               P0_01 //D21
 
-  #define X_SERIAL_TX_PIN               P0_03 //D0
-  #define X_SERIAL_RX_PIN               P0_02 //D1
+  #define Y_SERIAL_TX_PIN               P0_00 //D20
+  #define Y_SERIAL_RX_PIN               P0_01 //D21
 
-  #define Y_SERIAL_TX_PIN               P2_06 //D59
-  #define Y_SERIAL_RX_PIN               P0_26 //D63
+  //S7: TMC 2208 is hardcoded at Address 0
+  #define  E0_SLAVE_ADDRESS 0 
+  #define  X_SLAVE_ADDRESS 1
+  #define  Y_SLAVE_ADDRESS 2
+
+  //S7: Z/Z2 use the new TMC5160 and use SW SPI
+  
+  //S7: Remove Z Uart Pin Defines
+  #define Z_SERIAL_TX_PIN -1
+  #define Z_SERIAL_RX_PIN -1
+
+  //S7: Set Z CS to Pin (D41) - (Was disabled in S1)
+  #define Z_CS_PIN P1_22
+
+  //S7: Set Z2 CS to Pin (D41)
+  #define Z2_CS_PIN P1_22
+
+  //S7: Enable SW SPI for Z1/Z2 5160 Drivers
+  #define TMC_USE_SW_SPI
+
+  //S7: Overide Pins for SW SPI to use same as HW SPI so we can use Ramps 1.6+ Onboard SPI Jumpers
+  #define TMC_SW_MOSI       P0_18  // (51)  system defined J3-10 & AUX-3
+  #define TMC_SW_MISO       P0_17  // (50)  system defined J3-10 & AUX-3
+  #define TMC_SW_SCK        P0_15  // (52)  system defined J3-9 & AUX-3
 
   #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
 
@@ -2541,22 +2550,26 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    //S6: Set Current to 700mA
-    #define Z_CURRENT       700
+    //S7: Set Current back to 900mA
+    #define Z_CURRENT       900
     #define Z_CURRENT_HOME  Z_CURRENT
     #define Z_MICROSTEPS     16
-    #define Z_RSENSE          0.11
-    #define Z_CHAIN_POS      -1
+    //S7: Update to TMC5160 Rsense 
+    #define Z_RSENSE          0.075
+    //S7: Z is First in Line for SPI Chain
+    #define Z_CHAIN_POS      1
     //#define Z_INTERPOLATE  true
   #endif
 
   #if AXIS_IS_TMC(Z2)
-    //S6: Set Current to 700mA
-    #define Z2_CURRENT      700
+    //S7: Set Current back to 900mA
+    #define Z2_CURRENT      900
     #define Z2_CURRENT_HOME Z2_CURRENT
     #define Z2_MICROSTEPS    16
-    #define Z2_RSENSE         0.11
-    #define Z2_CHAIN_POS     -1
+    //S7: Update to TMC5160 Rsense 
+    #define Z2_RSENSE         0.075
+    //S7: Z2 is Last in Line for SPI Chain
+    #define Z2_CHAIN_POS     2
     //#define Z2_INTERPOLATE true
   #endif
 
@@ -2737,17 +2750,17 @@
    * Define your own with:
    * { <off_time[1..15]>, <hysteresis_end[-3..12]>, hysteresis_start[1..8] }
    */
-  //S1: Change Chopper timing for X/Y to 36V and Extruder to 24v
-  #define CHOPPER_TIMING CHOPPER_DEFAULT_12V        // All axes (override below)
-  #define CHOPPER_TIMING_X  CHOPPER_DEFAULT_36V   // For X Axes (override below)
+  //S7: Change Default Chopper timing to 24V and X/Y to 24V with 0.9 Degree Stepper Motors
+  #define CHOPPER_TIMING CHOPPER_DEFAULT_24V        // All axes (override below)
+  #define CHOPPER_TIMING_X  CHOPPER_09STEP_24V   // For X Axes (override below)
   //#define CHOPPER_TIMING_X2 CHOPPER_DEFAULT_12V
-  #define CHOPPER_TIMING_Y  CHOPPER_DEFAULT_36V   // For Y Axes (override below)
+  #define CHOPPER_TIMING_Y  CHOPPER_09STEP_24V   // For Y Axes (override below)
   //#define CHOPPER_TIMING_Y2 CHOPPER_DEFAULT_12V
   //#define CHOPPER_TIMING_Z  CHOPPER_DEFAULT_12V   // For Z Axes (override below)
   //#define CHOPPER_TIMING_Z2 CHOPPER_DEFAULT_12V
   //#define CHOPPER_TIMING_Z3 CHOPPER_DEFAULT_12V
   //#define CHOPPER_TIMING_Z4 CHOPPER_DEFAULT_12V
-  #define CHOPPER_TIMING_E  CHOPPER_DEFAULT_24V   // For Extruders (override below)
+  //#define CHOPPER_TIMING_E  CHOPPER_DEFAULT_24V   // For Extruders (override below)
   //#define CHOPPER_TIMING_E1 CHOPPER_DEFAULT_12V
   //#define CHOPPER_TIMING_E2 CHOPPER_DEFAULT_12V
   //#define CHOPPER_TIMING_E3 CHOPPER_DEFAULT_12V
@@ -3479,11 +3492,8 @@
 #endif
 
 // Support for MeatPack G-code compression (https://github.com/scottmudge/OctoPrint-MeatPack)
-//S5: Enable Meatpack
-#define MEATPACK
-
-//#define MEATPACK_ON_SERIAL_PORT_1
-//#define MEATPACK_ON_SERIAL_PORT_2
+//S7: Disable Meatpack (Was Enabled in S5) (Tempararly Disabled until port of Multiserial from Bugfix Branch is done)
+//#define MEATPACK
 
 //#define GCODE_CASE_INSENSITIVE  // Accept G-code sent to the firmware in lowercase
 

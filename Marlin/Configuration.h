@@ -99,27 +99,34 @@
 // S6: Modified G34 Function to allow Reversing the Steppers, Reverse Z Stepper Orientation, Decrease Z Auto Align Multiplier - 
 // Enabled Home before Filament Change, Lowered Z Stepper Currents.
 // MEATPACK: Enabled Meatpack
+// S7: Added New Pin for TMC5160 SPI P1_22(D41), Enable Secondary Serial Pins(D1/D0) for BTT TFT35 Touch Screen Display -
+// Changed X/Y Drivers from TMC2208 to TMC2209, Changed Z/Z2 Drivers from TMC2209 to TMC5160, Changed E Driver from TMC2209 to TMC2208 -
+// Disabled LCD GFX for Bed Mesh and  Babystepping, Disabled All LCD Screens, Enabled PWM for Case Light and set PWM Freq to 60hz -
+// Setup TMC5160 under Chained SW SPI, Increase Z/Z2 Current back to 900mA, Set Chopper timings to all 24V, Disable Meatpack -
+// Changed the Following Pin Designations:
+// Case Heater P1_10(D75) -> P0_26(D63)
+// Case Lights P1_04(D77) -> P1_18(D4)
+// Extruder Cooling Fan P1_01(D79) -> P1_21(D6)
+// Control Board Fan P1_16(D70) -> P1_19(D5)
+// Case Fan P1_21(D6) -> P2_06(D59)
 //===========================================================================
 //============================ Modified Pins ================================
 //===========================================================================
-// TEMP_1_PIN (Third Thermoresitor slot on Ramps Board) - TEMP_CHAMBER_PIN
 //---------------------ReArm Ethernet Expansion Port-------------------------
 // P1_14 (D73) - Filament Runout Sensor Pin
-// P1_16 (D70) - Control Board Fan/Bed Power Supply Fan
-// P1_01 (D79) - Extruder Cooling Fan/Extruder Light
-// P1_04 (D77) - Case Lights Top and Bottom
-// P1_10 (D75) - Case Heater
-//-----------------------------------RAMPS Servo Header----------------------
-// P1_21 (D6) - Case Fan
-//--------------------------------RAMPS AUX1 Header (D0/D1)------------------
-// P0_03 (D0) - TMC2208 X Driver Serial TX
-// P0_02 (D1) - TMC2008 X Driver Serial RX
-//--------------------------------RAMPS AUX2 Header (D59/D63)----------------
-// P2_06 (D59) - TMC2208 Y Driver UART TX
-// P0_26 (D63) - TMC2208 Y Driver UART RX
-//-----------------------------RAMPS I2C Port(D21/D20)-----------------------
-// P0_01 (D21) TMC2209 E/Z1/Z2 Serial Bus RX
-// P0_00 (D20) TMC2209 E/Z1/Z2 Serial Bus TX
+//----------------------------RAMPS AUX2 Header------------------------------
+// P2_06 (D59) - Case Fan
+// P0_26 (D63) - Case Heater
+//---------------------------RAMPS Servo Header------------------------------
+// P1_19 (D5) - Control Board Fan/Bed Power Supply Fan
+// P1_21 (D6) - Extruder Cooling Fan/Extruder Light
+// P1_18 (D4) - Case Lights Top and Bottom
+//---------------------------RAMPS AUX4 Header-------------------------------
+// P1_22 (D41) - TMC5160 Z/Z1 Driver SPI CS
+// P1_22 (D41) - TMC5160 Z/Z1 Driver SPI CS
+//-----------------------------RAMPS I2C Port--------------------------------
+// P0_01 (D21) TMC2209 E/X/Y Serial Bus RX
+// P0_00 (D20) TMC2209 E/X/Y Serial Bus TX
 //
 // @section info
 
@@ -167,7 +174,8 @@
  * Currently Ethernet (-2) is only supported on Teensy 4.1 boards.
  * :[-2, -1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
-//#define SERIAL_PORT_2 -1
+//S7: Enable Secondary Serial Pins(D1/D0) for BTT TFT35 Touch Screen Display
+#define SERIAL_PORT_2 0
 
 /**
  * This setting determines the communication speed of the printer.
@@ -803,17 +811,16 @@
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'L6474', 'POWERSTEP01', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
- //Currently Using TMC2209's for Z1/Z2 @ 12V, TMC2209 for Extruder @ 24v and TMC2208 @36v for X/Y
- //S1: Setup Drivers to currently installed
-#define X_DRIVER_TYPE  TMC2208
-#define Y_DRIVER_TYPE  TMC2208
-#define Z_DRIVER_TYPE  TMC2209
+//S1: Setup Drivers to currently installed
+#define X_DRIVER_TYPE  TMC2209
+#define Y_DRIVER_TYPE  TMC2209
+#define Z_DRIVER_TYPE  TMC5160
 //#define X2_DRIVER_TYPE A4988
 //#define Y2_DRIVER_TYPE A4988
-#define Z2_DRIVER_TYPE TMC2209
+#define Z2_DRIVER_TYPE TMC5160
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
-#define E0_DRIVER_TYPE TMC2209
+#define E0_DRIVER_TYPE TMC2208
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -1431,6 +1438,8 @@
 #define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
 
+  //S7: Remove D73's Old Designation
+  #define E0_CS_PIN                        -1
   //S1: Override Pin for Sensor
   #define FIL_RUNOUT_PIN                   P1_14  // (D73)
 
@@ -1633,8 +1642,8 @@
   //===========================================================================
   //========================= Unified Bed Leveling ============================
   //===========================================================================
-  //S2: Enable
-  #define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
+  //S7: Disable (Was Enabled in S1)
+  //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
   //S2: Set Mesh Inset to 35 to start
   #define MESH_INSET 35              // Set Mesh bounds as an inset region of the bed
@@ -2352,8 +2361,8 @@
 // RepRapDiscount FULL GRAPHIC Smart Controller
 // https://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
 //
-//S1: Enable LCD Screen
-#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+//S7: Disable LCD Screen (Was Enabled in S1)
+//#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 
 //
 // K.3D Full Graphic Smart Controller
