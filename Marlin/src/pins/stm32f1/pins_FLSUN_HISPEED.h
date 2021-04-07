@@ -135,11 +135,11 @@
     #define Y_SLAVE_ADDRESS                    0
     #define Z_SLAVE_ADDRESS                    0
 
-    #define X_SERIAL_TX_PIN                 PA10  // RXD1
-    #define X_SERIAL_RX_PIN                 PA10  // RXD1
+    #define X_SERIAL_TX_PIN                 -1  // RXD1
+    #define X_SERIAL_RX_PIN                 -1  // RXD1
 
-    #define Y_SERIAL_TX_PIN                 PA9   // TXD1
-    #define Y_SERIAL_RX_PIN                 PA9   // TXD1
+    #define Y_SERIAL_TX_PIN                 -1   // TXD1
+    #define Y_SERIAL_RX_PIN                 -1   // TXD1
 
     #define Z_SERIAL_TX_PIN                 PC7   // IO1
     #define Z_SERIAL_RX_PIN                 PC7   // IO1
@@ -184,8 +184,8 @@
 #if AXIS_DRIVER_TYPE(E0,TMC2208)||AXIS_DRIVER_TYPE(E0,TMC2209)
   #define E0_SLAVE_ADDRESS                     0
 
-  #define E0_SERIAL_TX_PIN                  PA8   // IO0
-  #define E0_SERIAL_RX_PIN                  PA8   // IO0
+  #define E0_SERIAL_TX_PIN                  PA9   // IO0
+  #define E0_SERIAL_RX_PIN                  PA10   // IO0
   #define TMC_BAUD_RATE                    19200
 #else
   // Motor current PWM pins
