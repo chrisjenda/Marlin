@@ -709,7 +709,7 @@
   // Make delta curves from many straight lines (linear interpolation).
   // This is a trade-off between visible corners (not enough segments)
   // and processor overload (too many expensive sqrt calls).
-  #define DELTA_SEGMENTS_PER_SECOND 200
+  #define DELTA_SEGMENTS_PER_SECOND 80
 
   // After homing move down to a height where XY movement is unconstrained
   //S1: Disable
@@ -841,7 +841,7 @@
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
-#define E0_DRIVER_TYPE A4988
+#define E0_DRIVER_TYPE TMC2208
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -1360,7 +1360,7 @@
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
 //S1: Invert E because of Titan							   
-#define INVERT_E0_DIR true  // TITAN Extruder
+#define INVERT_E0_DIR false  // TITAN Extruder
 #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
@@ -1448,9 +1448,8 @@
  *
  * RAMPS-based boards use SERVO3_PIN for the first runout sensor.
  * For other boards you may need to define FIL_RUNOUT_PIN, FIL_RUNOUT2_PIN, etc.
- */
-//S1: Enable			
-#define FILAMENT_RUNOUT_SENSOR
+ */		
+//define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   //S1: Set to false
   #define FIL_RUNOUT_ENABLED_DEFAULT false // Enable the sensor on startup. Override with M412 followed by M500.

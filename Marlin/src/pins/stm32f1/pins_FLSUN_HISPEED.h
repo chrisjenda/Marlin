@@ -123,10 +123,10 @@
 #if HAS_TMC_UART
   // SoftwareSerial with one pin per driver
   // Compatible with TMC2208 and TMC2209 drivers
-  #define X_SERIAL_TX_PIN                   PA10  // RXD1
-  #define X_SERIAL_RX_PIN                   PA10  // RXD1
-  #define Y_SERIAL_TX_PIN                   PA9   // TXD1
-  #define Y_SERIAL_RX_PIN                   PA9   // TXD1
+  #define X_SERIAL_TX_PIN                   -1  // RXD1
+  #define X_SERIAL_RX_PIN                   -1  // RXD1
+  #define Y_SERIAL_TX_PIN                   -1   // TXD1
+  #define Y_SERIAL_RX_PIN                   -1   // TXD1
   #define Z_SERIAL_TX_PIN                   PC7   // IO1
   #define Z_SERIAL_RX_PIN                   PC7   // IO1
   #define TMC_BAUD_RATE                    19200
@@ -166,8 +166,8 @@
 // EXTRUDER
 //
 #if AXIS_DRIVER_TYPE_E0(TMC2208) || AXIS_DRIVER_TYPE_E0(TMC2209)
-  #define E0_SERIAL_TX_PIN                  PA8   // IO0
-  #define E0_SERIAL_RX_PIN                  PA8   // IO0
+  #define E0_SERIAL_TX_PIN                  PA9   // RXD1
+  #define E0_SERIAL_RX_PIN                  PA10   // TXD1
   #define TMC_BAUD_RATE                    19200
 #else
   // Motor current PWM pins
